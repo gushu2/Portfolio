@@ -19,7 +19,14 @@ export default function VideoModal({ video, onClose }) {
   if (!video) return null
 
   const isYoutube = video.youtubeUrl && video.youtubeUrl.trim() !== ''
-  const isLocalFile = !isYoutube && video.videoUrl
+  const isDrive = !isYoutube && video.videoUrl && video.videoUrl.includes('drive.google.com')
+  const isLocalFile = !isYoutube && !isDrive && video.videoUrl
+
+  const getDriveEmbedUrl = (url) => {
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/)
+    if (match) return `https://drive.google.com/file/d/${match[1]}/preview`
+    return url
+  }
 
   return (
     <AnimatePresence>
@@ -84,6 +91,16 @@ export default function VideoModal({ video, onClose }) {
                 controls
                 playing
                 config={{ youtube: { playerVars: { showinfo: 1 } } }}
+              />
+            ) : isDrive ? (
+              <iframe
+                src={getDriveEmbedUrl(video.videoUrl)}
+                width="100%"
+                height="100%"
+                style={{ position: 'absolute', top: 0, left: 0, border: 'none' }}
+                allow="autoplay"
+                allowFullScreen
+                title={video.title}
               />
             ) : isLocalFile ? (
               <video
