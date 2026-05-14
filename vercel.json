@@ -1,25 +1,15 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    { "src": "/api/auth/login", "dest": "/api/auth/login.js" },
-    { "src": "/api/auth/verify", "dest": "/api/auth/verify.js" },
-    { "src": "/api/videos", "dest": "/api/videos.js" },
-    { "src": "/api/videos/(.*)", "dest": "/api/videos/[id].js" },
-    { "src": "/api/contact", "dest": "/api/contact.js" },
-    { "src": "/api/health", "dest": "/api/health.js" },
-    { "src": "/(.*)", "dest": "/frontend/dist/index.html" }
+  "buildCommand": "npm install --prefix frontend && npm run build --prefix frontend",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "npm install",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/auth/login", "destination": "/api/auth/login" },
+    { "source": "/api/auth/verify", "destination": "/api/auth/verify" },
+    { "source": "/api/videos", "destination": "/api/videos" },
+    { "source": "/api/contact", "destination": "/api/contact" },
+    { "source": "/api/health", "destination": "/api/health" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
