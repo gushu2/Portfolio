@@ -1,33 +1,51 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Film } from 'lucide-react'
-import axios from 'axios'
 import VideoModal from './VideoModal'
 import VideoCard from './VideoCard'
 
 const CATEGORIES = ['All', 'Reels', 'Cinematic Edits', 'Short Films', 'Events', 'Highlights']
 
+const VIDEOS = [
+  {
+    id: '2fb85ddd-944a-429b-921b-4aa840c33031',
+    title: 'MITK COLLEGE FEST',
+    category: 'Reels',
+    description: 'Energetic highlights reel from MITK college fest.',
+    videoUrl: 'https://drive.google.com/file/d/1lb88g-TI4CEfuEozoadWyA7LkE_WZ5Fu/view',
+    thumbnailUrl: null,
+    youtubeUrl: null
+  },
+  {
+    id: '488bd43d-070d-48b6-b416-0c8c6e03cff4',
+    title: 'NAVARATRI 2025 TRAILER',
+    category: 'Reels',
+    description: 'Cinematic trailer for Navaratri 2025 celebrations.',
+    videoUrl: 'https://drive.google.com/file/d/13kytvxtWtrJWyEg5KUSZ3ecuBHvPC9Pt/view',
+    thumbnailUrl: null,
+    youtubeUrl: null
+  },
+  {
+    id: '8e45e42b-6c58-42b5-b5ac-b418efc11dfd',
+    title: 'TARANA BAND HIGHLIGHTS',
+    category: 'Cinematic Edits',
+    description: 'Cinematic highlights of Tarana Band performance.',
+    videoUrl: 'https://drive.google.com/file/d/11aqPIsP8J855_Txb-oDkHJs4a56dFqsn/view',
+    thumbnailUrl: null,
+    youtubeUrl: null
+  }
+]
+
 export default function Portfolio() {
-  const [videos, setVideos] = useState([])
   const [active, setActive] = useState('All')
   const [selected, setSelected] = useState(null)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    axios.get('/api/videos')
-      .then(res => setVideos(res.data))
-      .catch(() => setVideos([]))
-      .finally(() => setLoading(false))
-  }, [])
-
-  const filtered = active === 'All' ? videos : videos.filter(v => v.category === active)
+  const filtered = active === 'All' ? VIDEOS : VIDEOS.filter(v => v.category === active)
 
   return (
     <section id="portfolio" className="section-pad" style={{ background: '#0a0a0a', position: 'relative', overflow: 'hidden' }}>
-      {/* Mandala background */}
       <div className="mandala-bg" style={{ position: 'absolute', inset: 0, opacity: 0.5 }} />
 
-      {/* Top ornate border */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: '3px',
         background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.2), rgba(201,169,110,0.6), rgba(201,169,110,0.2), transparent)'
@@ -55,7 +73,6 @@ export default function Portfolio() {
           </div>
         </motion.div>
 
-        {/* Category filter */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -81,23 +98,13 @@ export default function Portfolio() {
           ))}
         </motion.div>
 
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '6rem 0' }}>
-            <div style={{
-              width: '40px', height: '40px',
-              border: '1px solid rgba(201,169,110,0.3)',
-              borderTopColor: '#c9a96e', borderRadius: '50%',
-              animation: 'spin 0.8s linear infinite', margin: '0 auto'
-            }} />
-          </div>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
             style={{ textAlign: 'center', padding: '6rem 2rem', border: '1px solid rgba(201,169,110,0.1)', background: 'rgba(201,169,110,0.02)' }}
           >
             <Film size={48} color="rgba(201,169,110,0.2)" style={{ margin: '0 auto 1.5rem' }} />
-            <p style={{ fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 400, color: '#3a3530', marginBottom: '0.5rem' }}>Coming Soon</p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', color: '#2a2a2a', letterSpacing: '0.1em' }}>Videos will appear here once uploaded</p>
+            <p style={{ fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 400, color: '#3a3530', marginBottom: '0.5rem' }}>No videos in this category</p>
           </motion.div>
         ) : (
           <div className="portfolio-grid">
@@ -110,7 +117,6 @@ export default function Portfolio() {
         )}
       </div>
 
-      {/* Bottom ornate border */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px',
         background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.2), rgba(201,169,110,0.6), rgba(201,169,110,0.2), transparent)'
